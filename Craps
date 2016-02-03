@@ -1,0 +1,149 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package craps;
+
+import java.util.Random;
+import java.util.Scanner;
+
+/**
+ *
+ * @author guohc
+ */
+public class Craps {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        /*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+         */
+        Scanner input = new Scanner(System.in);
+        int credit = 100;
+        int dice1, dice2;
+        boolean EnoughMoneyCheck = true;
+        boolean Game = false;
+        boolean BetCheck = false;
+        boolean PlayAgainCheck = false;
+        int number = 0;
+        System.out.println("&& WELCOME TO CASINO CRAPS &&");
+        System.out.println(" ");
+        System.out.println("You have a pot of 100 coins. ");
+
+        Random random = new Random();
+
+        while (true) {//infinite loop
+            Game = false;
+            BetCheck = false;
+            PlayAgainCheck = false;
+
+            while (!BetCheck) {
+                System.out.println("How much do you want to bet?");
+                number = input.nextInt();
+                if (number < 0 || number > 100) {
+                    System.out.println("That is not a valid bet. Please enter an amount between 0 to 100");
+                    BetCheck = false;
+                    EnoughMoneyCheck = false;
+                    Game = false;
+                } else {
+                    EnoughMoneyCheck = true;
+                }
+                if (EnoughMoneyCheck) {
+                    if (number > credit) {
+                        System.out.println("That is not a valid bet. Please enter an amount less than your credit: " + credit);
+                        BetCheck = false;
+                        Game = false;
+                    } else {
+                        BetCheck = true;
+                        Game = true;
+                    }
+                }
+
+            }
+            if (Game) {
+                dice1 = random.nextInt(6) + 1;
+                dice2 = random.nextInt(6) + 1;
+                int roll = dice1 + dice2;
+                System.out.println("Rolling dice...");
+                System.out.println("You rolled a " + dice1 + " and a " + dice2);
+                System.out.println("For a total of " + roll);
+                switch (roll) {
+                    case 2:
+                    case 3:
+                    case 12:
+                        System.out.println("You LOSE!");
+                        credit = credit - number;
+                        System.out.println("You pot is " + credit + " coins");
+                        break;
+
+                    case 7:
+                    case 11:
+                        System.out.println("You WIN!");
+                        credit = credit + number;
+                        System.out.println("Your pot is now " + credit + " coins");
+                        break;
+
+                    default:
+                        System.out.println("Your point is " + roll);
+                        dice1 = random.nextInt(6) + 1;
+                        dice2 = random.nextInt(6) + 1;
+                        int roll2 = dice1 + dice2;
+                        System.out.println("Rolling dice...");
+                        System.out.println("You rolled a " + dice1 + " and a " + dice2);
+                        System.out.println("For a total of " + roll2);
+                        do {
+                            dice1 = random.nextInt(6) + 1;
+                            dice2 = random.nextInt(6) + 1;
+                            roll2 = dice1 + dice2;
+                            System.out.println("Rolling dice...");
+                            System.out.println("You rolled a " + dice1 + " and a " + dice2);
+                            System.out.println("For a total of " + roll2);
+
+                        } while (roll2 != 7 && roll2 != roll);
+                        if (roll == roll2) {
+                            System.out.println("You Win!");
+                            credit = credit + number;
+                            System.out.println("Your pot is now " + credit + " coins.");
+
+                        } else if (roll2 == 7) {
+                            System.out.println(" ");
+                            System.out.println("You LOSE!");
+                            credit = credit - number;
+                            System.out.println("Your pot is now " + credit + " coins.");
+                        }
+                        break;
+                }
+                if (credit < 0 || credit == 0) {
+                    System.out.println("You LOSE! Run out of money.");
+                    System.exit(0);
+                }
+                System.out.println("You have a pot of " + credit + " coins.");
+
+                while (!PlayAgainCheck) {
+                    System.out.println("Do you want to play again? (1 for yes, 0 for no)");
+                    String answer = input.next();
+
+                    if (answer.equals("1")) {
+                        System.out.println("You have a pot of " + credit + " coins.");
+                        Game = false;
+                        PlayAgainCheck = true;
+
+                    } else if (answer.equals("0")) {
+                        System.out.println("You have pot of " + credit + " coins.");
+                        System.out.println("That's pretty good! Goodbye!");
+                        System.exit(0);
+                    } else {
+                        System.out.println("please chose a valid number");
+                        PlayAgainCheck = false;
+                    }
+                }
+            }
+        }
+
+    }
+}
